@@ -1,0 +1,18 @@
+[ branch force ]
+cond def
+
+[ 32 - 5 * 9 / ]
+f_to_c def
+
+32 f_to_c print
+212 f_to_c print
+
+90 f_to_c print
+100 print
+
+
+[ notboiling print ]
+[ boiling print ]
+900 f_to_c 100 < cond
+
+
