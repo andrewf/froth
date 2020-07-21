@@ -11,8 +11,9 @@ f_to_c def
 100 print
 
 
+900 f_to_c 100 <
 [ notboiling print ]
 [ boiling print ]
-900 f_to_c 100 < cond
+cond
 
 
