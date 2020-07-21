@@ -11,16 +11,6 @@ def froth_binop(f):
     return frothy_op
 
 
-def branch(froth):
-    # condition yes no branch
-    nobranch = froth.pop()
-    yesbranch = froth.pop()
-    cond = froth.pop()
-    toexecute = yesbranch if cond else nobranch
-    # each branch is a value for now
-    froth.push(toexecute)
-
-
 def force_thunk(froth):
     thunk = froth.pop()
     assert(isinstance(thunk, list))
@@ -40,9 +30,34 @@ def for_loop(froth):
         froth.eval_block(body)
 
 
-def dup(froth):
-    x = froth.pop()
+def numify(boolish):
+    if boolish is True:
+        return 1
+    elif boolish is False:
+        return 0
+    elif isinstance(boolish, int):
+        return boolish
+    else:
+        assert False, "tried to numify non-numeric value"
+
+
+def pick(froth):
+    # n
+    # Copy nth item back (0-based) to top
+    # n may be a bool
+    n = numify(froth.pop())
+    item_index = -(n+1)  # negative indices are effectively 1-based
+    x = froth.stack[item_index]
     froth.push(x)
+
+
+def roll(froth):
+    # n
+    # move nth item back (0-based) to top
+    n = numify(froth.pop())
+    item_index = -(n+1)  # negative indices are effectively 1-based
+    x = froth.stack[item_index]
+    del froth.stack[item_index]
     froth.push(x)
 
 
@@ -81,12 +96,17 @@ class Froth:
             '%': froth_binop(lambda a, b: a % b),
             '<': froth_binop(lambda a, b: a < b),
             '=': froth_binop(lambda a, b: a == b),
-            'branch': branch,
+            'force': force_thunk,
+            'pop': lambda f: f.pop(),
+            'pick': pick,
+            'roll': roll,
+            'dup': [0, 'pick'],
+            # cond yesthunk nothunk -- thunk
+            # final [1 roll pop] is to drop non-chosen thunk
+            'branch': [2, 'roll', 'roll', 1, 'roll', 'pop'],
             'print': print_top,
             'for': for_loop,
             'def': self.define_from_stack,
-            'force': force_thunk,
-            'dup': dup,
         }
         self.parser = ParseState()
 
