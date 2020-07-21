@@ -167,6 +167,7 @@ if __name__ == '__main__':
     f = Froth()
 
     for line in sys.stdin:
-        for word in line.split():
+        nice_line = line.replace('[', ' [ ').replace(']', ' ] ')
+        for word in nice_line.split():
             f.toplevel_word(word)
 

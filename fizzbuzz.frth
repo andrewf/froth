@@ -1,16 +1,16 @@
 
-[ branch force ] cond def
+[branch force] cond def
 
 [
   dup 15 % 0 =
-  [ fizzbuzz print ]
+  [fizzbuzz print]
   [
     dup 5 % 0 = 
-    [ buzz print ]
+    [buzz print]
     [
       dup 3 % 0 =
-      [ fizz print ]
-      [ print ]
+      [fizz print]
+      [print]
       cond
     ]
     cond
